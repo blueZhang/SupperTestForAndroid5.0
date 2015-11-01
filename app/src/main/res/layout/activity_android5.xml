@@ -61,10 +61,14 @@
         </LinearLayout>
 
 
-        <android.support.v7.widget.RecyclerView
+        <android.support.v7.widget.CardView
+                app:cardCornerRadius="20dp"
+                app:cardElevation="10dp"
+
+                app:cardPreventCornerOverlap="true"
                 android:id="@+id/recycleview_id_android5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.CardView>
 </LinearLayout>

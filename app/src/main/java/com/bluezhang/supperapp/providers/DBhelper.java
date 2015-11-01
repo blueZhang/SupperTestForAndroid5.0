@@ -55,5 +55,7 @@ public class DBhelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        //TODO　将旧的数据进行删除，添加新的数据库
+
     }
 }

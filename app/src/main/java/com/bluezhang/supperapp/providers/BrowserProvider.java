@@ -31,6 +31,9 @@ public class BrowserProvider extends ContentProvider {
         match.addURI("*", "history", CODE_HISTORY);//comtent://authority//history
     }
 
+    private SQLiteDatabase db;
+    private SQLiteDatabase rdb;
+
     public BrowserProvider() {
     }
 
@@ -43,6 +46,10 @@ public class BrowserProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         dBhelper = new DBhelper(getContext());
+        rdb = dBhelper.getReadableDatabase();
+        db = dBhelper.getWritableDatabase();
+
+
         return true;
     }
 
@@ -63,8 +70,7 @@ public class BrowserProvider extends ContentProvider {
                 values = new ContentValues();
             }
             //TODO 判断匹配URI到底是处理哪一个表
-            int code = BrowserProvider.match.match(uri);
-            SQLiteDatabase db = dBhelper.getWritableDatabase();
+            int code = BrowserProvider.match.match(uri);;
             switch (code) {
                 case CODE_HISTORY://代表添加历史纪录
                     long rid = db.insert(
@@ -100,10 +106,9 @@ public class BrowserProvider extends ContentProvider {
         Cursor ret = null;
         if (uri != null) {
             int code = BrowserProvider.match.match(uri);
-            SQLiteDatabase db = dBhelper.getReadableDatabase();
             switch (code) {
                 case CODE_HISTORY:
-                    ret = db.query(
+                    ret = rdb.query(
                             DataContract.TABLE_HISTORY,
                             projection,
                             selection,
@@ -129,7 +134,6 @@ public class BrowserProvider extends ContentProvider {
             }
             //TODO 判断匹配URI到底是处理哪一个表
             int code = BrowserProvider.match.match(uri);
-            SQLiteDatabase db = dBhelper.getWritableDatabase();
             switch (code) {
                 case CODE_HISTORY://代表添加历史纪录
                     //更新行
@@ -147,13 +151,35 @@ public class BrowserProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        int ret = 0;
+        if (uri != null) {
+            ret = db.delete(
+                    DataContract.TABLE_HISTORY,
+                    selection,
+                    selectionArgs
+            );
+
+        }
+
+        return ret ;
+
     }
 
     @Override
     public String getType(Uri uri) {
 
-        throw new UnsupportedOperationException("Not yet implemented");
+        //TODO 对URI进行判断，判断是那种类型的URI 并返回时属于哪一表的URI
+        String ret = null;
+        int code = BrowserProvider.match.match(uri);
+        switch (code){
+            case CODE_HISTORY:
+                break;
+            //TODO 如果有其他的表的话那么就要进行比较
+        }
+
+
+        return ret;
     }
 
 
